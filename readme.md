@@ -7,6 +7,8 @@ The Angular Customizable Dropdown is a somewhat simple yet flexible dropdown com
 + No enforced styling
 + Simple to use
 
+Also available as a bower package, __angular-customizable-dropdown__.
+
 # Building #
 
 Simple __npm install__ will suffice.
