@@ -37,7 +37,7 @@ See the examples page for more details.
 
 Functional examples can be found here:
 
-https://rawgit.com/Valvefi/angular-customizable-dropdown/example/index.html
+https://rawgit.com/Valvefi/angular-customizable-dropdown/master/example/index.html
 
 # License #
 
