@@ -1,0 +1,5 @@
+.sass-cache/
+.idea/
+src/generated
+node_modules/
+

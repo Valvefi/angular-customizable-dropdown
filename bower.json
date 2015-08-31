@@ -1,0 +1,32 @@
+{
+  "name": "angular-customizable-dropdown",
+  "description": "Customizable dropdown directive for AngularJS",
+  "license": "MIT",
+  "version": "1.0.0",
+  "main": [
+    "dist/ac-dropdown.min.js"
+  ],
+  "devDependencies": {
+  },
+  "dependencies": {
+  },
+  "authors": [
+    "Jussi Saarivirta <jusasi@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Valvefi/angular-customizable-dropdown"
+  },
+  "keywords": [
+    "angular",
+    "dropdown",
+    "customizable"
+  ],
+  "ignore": [
+    ".gitignore",
+    "README.md",
+    "Gruntfile.js",
+    "example/",
+    "src/"
+  ]
+}

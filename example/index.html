@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html ng-app="Example">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AngularCustomizableDropdown example</title>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-animate.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
+    <script type="text/javascript" src="ac-dropdown.min.js"></script>
+    <script type="text/javascript" src="module.js"></script>
+    <script type="text/javascript" src="controller.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <link href="styles.css" rel="stylesheet" />
+</head>
+<body ng-controller="ExampleCtrl as example">
+
+<h1>Angular Customizable Dropdown</h1>
+
+<h2>Introduction</h2>
+<p>
+    The Angular Customizable Dropdown is a somewhat simple yet flexible dropdown component. The aim of this component is to uncouple your data and its
+    representation from basic functionality. What this component provides is a skeleton for a dropdown, how you wish to style it and what you wish to use it
+    for is up to you. It provides the basic functionality of showing, hiding, selecting and dismissing the dropdown content. What happens inside
+    the dropdown content is all up to you.
+</p>
+<p>
+    <span>Example usages could be:</span>
+    <ul>
+        <li>A simple, styled dropdown menu</li>
+        <li>A dropdown opening a menu of clickable thumbnails</li>
+        <li>A dropdown opening a small search form</li>
+        <li>A popup menu</li>
+    </ul>
+    <span>Basically anything goes. Wherever you need to open something and close something you can use this component as a base.</span>
+</p>
+
+<h2>How to use</h2>
+<p>
+    Simply include the ac-dropdown.min.js to your HTML and add the <strong>AngularCustomizableDropdown</strong> module as a dependency to your Angular
+    app, like:
+</p>
+<pre>
+    <code>
+angular.module('Example', ['ngAnimate', 'AngularCustomizableDropdown']);
+    </code>
+</pre>
+<p>
+    Now you're ready to start using it. Just add it as a <strong>ac-dropdown</strong> element or attribute.
+</p>
+
+<h2>Simple example</h2>
+<p>
+    Perhaps the simplest case, uses the default functionality provided by the component.
+    The visible selected text is bound to a function in the controller (it could just as well simply be a scope variable, or basically anything)
+    and the DOM element with the directive contains the dropdown items (transcluded) inside it. By default the dropdown handles showing and hiding the content
+    itself by showing the items when the dropdown gets clicked and hides them when any element
+    inside or outside the dropdown gets clicked.
+</p>
+<p>
+    Note that clicking an item does nothing by default. This is by design. The component takes no interest in your data or its structure or what it's
+    supposed to do when an item is selected - the shown selected text is simply a data binding and you'll need to define what actually happens when you
+    select an item (it may or may not affect the displayed text - therefore
+    the component takes no part in this). In this example we have bound ng-click to call a function in the controller that sets the selected item.
+</p>
+<br/>
+<div ac-dropdown selected-text="example.getSelectedChoice()">
+    <ul class="dropdown-content">
+        <li ng-repeat="c in example.choices" ng-bind="c.name" ng-click="example.selectChoice(c)"></li>
+    </ul>
+</div>
+<br/>
+<p><strong>Source HTML & JS:</strong></p>
+<pre>
+    <code class="html">
+&lt;div ac-dropdown selected-text=&quot;example.getSelectedChoice()&quot;&gt;
+  &lt;ul class=&quot;dropdown-content&quot;&gt;
+    &lt;li ng-repeat=&quot;c in example.choices&quot; ng-bind=&quot;c.name&quot; ng-click=&quot;example.selectChoice(c)&quot;&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+    </code>
+    <code class="javascript">
+this.choices = [
+{
+  'name': 'Coca-Cola',
+  'value': 'coke'
+},
+{
+  'name': 'Pepsi Cola',
+  'value': 'pepsi'
+},
+{
+  'name': 'Mountain Dew',
+  'value': 'mountain-dew'
+},
+{
+  'name': 'API-IPA',
+  'value': 'api-ipa'
+}
+];
+
+this.selectedChoice = this.choices[0];
+
+this.selectChoice = function(choice) {
+  this.selectedChoice = choice;
+};
+
+this.getSelectedChoice = function() {
+  return &quot;Selected: &quot; + this.selectedChoice.name;
+};
+    </code>
+</pre>
+
+<h2>Complex example</h2>
+<p>Sometimes with complex structures there comes a need for a dropdown/popup that has its content not directly under it but placed in who knows where in the DOM tree.
+    Since we favor customization we can easily do this using a selector attribute. In addition since your implementation may be complex the dropdown logic
+    leaves the details on how to show and hide the content to you - statements bound to onOpened and onClosed attributes will be $scope.eval'd when the dropdown element gets clicked so
+    you'll need to create the implementations for showing and hiding your dropdown content.
+</p>
+<p>Normally once you click outside the dropdown content the dropdown will close. In addition to this you also have the option of disabling the automatic closing and triggering the closing
+    anywhere you choose from by sending an event <strong>angular-customizable-dropdown/&lt;dropdown name&gt;/close</strong> to the dropdown. This requires you to add a
+    name attribute to the dropdown element in order to direct the message to it. The following example utilizes all of these features.
+</p>
+<br/>
+<div ac-dropdown selected-text="example.getSelectedChoice()" content-selector="#my-external-dropdown-content" name="externalDropdown"
+        on-opened="example.externalDropdownVisible = true" on-closed="example.externalDropdownVisible = false" close-on-content-click="false">
+</div>
+<br/>
+<p><strong>Source HTML & JS:</strong></p>
+<pre>
+    <code class="html">
+&lt;div ac-dropdown selected-text=&quot;example.getSelectedChoice()&quot; content-selector=&quot;#my-external-dropdown-content&quot; name=&quot;externalDropdown&quot;
+  on-opened=&quot;example.externalDropdownVisible = true&quot; on-closed=&quot;example.externalDropdownVisible = false&quot; close-on-content-click=&quot;false&quot;&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;my-external-dropdown-content&quot; ng-show=&quot;example.externalDropdownVisible&quot;&gt;
+  &lt;h3&gt;External dropdown content&lt;/h3&gt;
+  &lt;ul&gt;
+    &lt;li ng-repeat=&quot;c in example.choices&quot; ng-bind=&quot;c.name&quot; ng-click=&quot;example.selectChoice(c)&quot;&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;button ng-click=&quot;example.dismissExternalDropdown()&quot;&gt;Close me&lt;/button&gt;
+&lt;/div&gt;
+    </code>
+    <code class="javascript">
+this.dismissExternalDropdown = function() {
+  $scope.$broadcast('angular-customizable-dropdown/externalDropdown/close');
+};
+    </code>
+</pre>
+
+
+<div id="my-external-dropdown-content" ng-show="example.externalDropdownVisible">
+    <h3>External dropdown content</h3>
+    <ul>
+        <li ng-repeat="c in example.choices" ng-bind="c.name" ng-click="example.selectChoice(c)"></li>
+    </ul>
+    <button ng-click="example.dismissExternalDropdown()">Close me</button>
+</div>
+
+<h2>Hovering</h2>
+<p>
+    Additionally the opening of the dropdown can be triggered by mouse hover with the openOnHover attribute. The duration of the dropdown staying open after the
+    mouse moves outside the dropdown or the dropdown content area can be set with the hoverTimeout attribute. Example:
+</p>
+<br/>
+<div ac-dropdown selected-text="example.getSelectedChoice()" open-on-hover="true" mouse-leave-timeout="300">
+    <ul class="dropdown-content">
+        <li ng-repeat="c in example.choices" ng-bind="c.name" ng-click="example.selectChoice(c)"></li>
+    </ul>
+</div>
+<br/>
+<p><strong>Source HTML</strong></p>
+<pre>
+    <code class="html">
+&lt;div ac-dropdown selected-text=&quot;example.getSelectedChoice()&quot; open-on-hover=&quot;true&quot; mouse-leave-timeout=&quot;300&quot;&gt;
+  &lt;ul class=&quot;dropdown-content&quot;&gt;
+    &lt;li ng-repeat=&quot;c in example.choices&quot; ng-bind=&quot;c.name&quot; ng-click=&quot;example.selectChoice(c)&quot;&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+    </code>
+</pre>
+
+<h2>Styling</h2>
+<p>
+    The component does not come with any built-in or forced styles - it's entirely up to you how you want to style
+    your dropdowns.
+</p>
+<p>
+    The dropdown template has two classes and elements: <strong>.customizable-dropdown</strong> and <strong>.customizable-dropdown__content</strong>.
+    customizable-dropdown class represents the closed dropdown and customizable-dropdown__content is the content element inside the dropdown. The transcluded
+    HTML will be placed inside it.
+</p>
+<p></p>
+</body>
+</html>

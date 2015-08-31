@@ -1,0 +1,1 @@
+angular.module('Example', ['ngAnimate', 'AngularCustomizableDropdown']);
